@@ -1,171 +1,936 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Todo App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes & Todo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+        :root {
+            --primary-bg: #1a1a1a;
+            --secondary-bg: #2d2d2d;
+            --tertiary-bg: #3a3a3a;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent: #6366f1;
+            --accent-hover: #818cf8;
+            --danger: #ef4444;
+            --danger-hover: #f87171;
+            --success: #10b981;
+            --border: #404040;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
 
-    body {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
 
-    .app {
-      background: #fff;
-      padding: 20px;
-      width: 100%;
-      max-width: 400px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
+        /* HEADER */
+        .app-header {
+            background: linear-gradient(135deg, var(--accent) 0%, #818cf8 100%);
+            padding: 20px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 15px;
-    }
+        .app-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
 
-    .input-group {
-      display: flex;
-      gap: 10px;
-    }
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
 
-    input {
-      flex: 1;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
+        .header-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
 
-    button {
-      padding: 10px 15px;
-      border: none;
-      background: #667eea;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+        .header-btn:active {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(0.95);
+        }
 
-    button:hover {
-      background: #5a67d8;
-    }
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px;
+            min-height: calc(100vh - 80px);
+        }
 
-    ul {
-      list-style: none;
-      margin-top: 15px;
-      max-height: 300px;
-      overflow-y: auto;
-    }
+        /* EMPTY STATE */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            text-align: center;
+            opacity: 0.6;
+        }
 
-    li {
-      background: #f4f4f4;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
 
-    li.completed {
-      text-decoration: line-through;
-      opacity: 0.6;
-    }
+        .empty-state p {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
 
-    .actions button {
-      margin-left: 5px;
-      background: #e53e3e;
-    }
+        /* NOTES GRID */
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            animation: fadeIn 0.3s ease;
+        }
 
-    .actions button.complete {
-      background: #38a169;
-    }
+        @media (max-width: 768px) {
+            .notes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
-    @media (max-width: 500px) {
-      .app {
-        margin: 10px;
-      }
-    }
-  </style>
+        /* NOTE CARD */
+        .note-card {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            min-height: 200px;
+        }
+
+        .note-card:active {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px var(--shadow);
+        }
+
+        .note-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--tertiary-bg), var(--secondary-bg));
+        }
+
+        .note-content {
+            padding: 12px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .note-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            word-break: break-word;
+            line-height: 1.3;
+        }
+
+        .note-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            flex: 1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            line-height: 1.4;
+        }
+
+        .note-timestamp {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            opacity: 0.7;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 8px;
+            padding: 8px 12px 0 12px;
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+        }
+
+        .note-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .edit-btn {
+            background: var(--accent);
+            color: white;
+        }
+
+        .edit-btn:active {
+            background: var(--accent-hover);
+            transform: scale(0.95);
+        }
+
+        .delete-btn {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .delete-btn:active {
+            background: rgba(239, 68, 68, 0.2);
+            transform: scale(0.95);
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        @media (min-width: 769px) {
+            .modal.active {
+                align-items: center;
+            }
+
+            .modal-content {
+                width: 90%;
+                max-width: 500px;
+                max-height: 90vh;
+            }
+        }
+
+        .modal-content {
+            background: var(--secondary-bg);
+            border-radius: 16px 16px 0 0;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        @media (min-width: 769px) {
+            .modal-content {
+                border-radius: 16px;
+            }
+        }
+
+        .modal-header {
+            padding: 20px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--secondary-bg);
+            z-index: 10;
+        }
+
+        .modal-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:active {
+            opacity: 0.6;
+        }
+
+        .modal-body {
+            padding: 20px 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--tertiary-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--tertiary-bg);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            background: var(--tertiary-bg);
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview-empty {
+            color: var(--text-secondary);
+            font-size: 40px;
+        }
+
+        .image-button-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .image-btn {
+            flex: 1;
+            padding: 12px;
+            background: var(--tertiary-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .image-btn:active {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: scale(0.97);
+        }
+
+        .remove-image-btn {
+            color: var(--danger);
+        }
+
+        .remove-image-btn:active {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger);
+        }
+
+        /* ACTION BUTTONS */
+        .modal-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+            background: var(--secondary-bg);
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+            color: white;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background: var(--tertiary-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:active {
+            background: var(--border);
+            transform: scale(0.97);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .btn-danger:active {
+            background: rgba(239, 68, 68, 0.2);
+            transform: scale(0.97);
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* TOAST NOTIFICATIONS */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 16px;
+            right: 16px;
+            background: var(--tertiary-bg);
+            color: var(--text-primary);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px var(--shadow);
+            z-index: 2000;
+            animation: slideUp 0.3s ease;
+        }
+
+        .toast.success {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .toast.error {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* FILE INPUT */
+        input[type="file"] {
+            display: none;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 480px) {
+            .app-header h1 {
+                font-size: 20px;
+            }
+
+            .container {
+                padding: 12px;
+            }
+
+            .modal-header {
+                padding: 16px;
+            }
+
+            .modal-body {
+                padding: 16px;
+            }
+
+            .modal-footer {
+                padding: 12px;
+            }
+
+            .btn {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+        }
+
+        /* UTILITY */
+        .hidden {
+            display: none !important;
+        }
+
+        .no-scroll {
+            overflow: hidden;
+        }
+    </style>
 </head>
-
 <body>
-
-<div class="app">
-  <h1>Todo App</h1>
-
-  <div class="input-group">
-    <input type="text" id="todoInput" placeholder="Add a task...">
-    <button onclick="addTodo()">Add</button>
-  </div>
-
-  <ul id="todoList"></ul>
-</div>
-
-<script>
-  let todos = JSON.parse(localStorage.getItem("todos")) || [];
-
-  function saveTodos() {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }
-
-  function renderTodos() {
-    const list = document.getElementById("todoList");
-    list.innerHTML = "";
-
-    todos.forEach((todo, index) => {
-      const li = document.createElement("li");
-      li.className = todo.completed ? "completed" : "";
-
-      li.innerHTML = `
-        <span onclick="toggleComplete(${index})">${todo.text}</span>
-        <div class="actions">
-          <button class="complete" onclick="toggleComplete(${index})">✔</button>
-          <button onclick="deleteTodo(${index})">✖</button>
+    <!-- HEADER -->
+    <header class="app-header">
+        <h1>📝 Notes</h1>
+        <div class="header-actions">
+            <button class="header-btn" id="clearAllBtn" title="Clear All Notes">🗑️</button>
+            <button class="header-btn" id="addNoteBtn" title="Add Note">➕</button>
         </div>
-      `;
+    </header>
 
-      list.appendChild(li);
-    });
-  }
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <div class="notes-grid" id="notesGrid">
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <p>No notes yet. Create your first note!</p>
+            </div>
+        </div>
+    </div>
 
-  function addTodo() {
-    const input = document.getElementById("todoInput");
-    const text = input.value.trim();
+    <!-- ADD/EDIT NOTE MODAL -->
+    <div class="modal" id="noteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">New Note</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-input" id="noteTitle" placeholder="Enter note title...">
+                </div>
 
-    if (text === "") return;
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" id="noteDescription" placeholder="Enter note description..."></textarea>
+                </div>
 
-    todos.push({ text, completed: false });
-    input.value = "";
+                <div class="form-group">
+                    <label class="form-label">Image</label>
+                    <div class="image-preview" id="imagePreview">
+                        <div class="image-preview-empty">🖼️</div>
+                    </div>
+                    <div class="image-button-group">
+                        <button class="image-btn" id="uploadImageBtn">📤 Upload Image</button>
+                        <button class="image-btn remove-image-btn" id="removeImageBtn">✕ Remove</button>
+                    </div>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveNoteBtn">Save Note</button>
+            </div>
+        </div>
+    </div>
 
-    saveTodos();
-    renderTodos();
-  }
+    <!-- CONFIRMATION MODAL -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content" style="max-width: 300px; max-height: auto;">
+            <div class="modal-header">
+                <h2>Confirm Action</h2>
+                <button class="close-btn" id="closeConfirmBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage" style="color: var(--text-secondary); margin-bottom: 20px;"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="confirmCancelBtn">Cancel</button>
+                <button class="btn btn-danger" id="confirmActionBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
 
-  function deleteTodo(index) {
-    todos.splice(index, 1);
-    saveTodos();
-    renderTodos();
-  }
+    <script>
+        // ========== APP STATE ==========
+        const app = {
+            notes: [],
+            editingNoteId: null,
+            currentImageBase64: null,
+            pendingAction: null,
 
-  function toggleComplete(index) {
-    todos[index].completed = !todos[index].completed;
-    saveTodos();
-    renderTodos();
-  }
+            init() {
+                this.loadNotes();
+                this.setupEventListeners();
+                this.render();
+            },
 
-  renderTodos();
-</script>
+            setupEventListeners() {
+                // Header buttons
+                document.getElementById('addNoteBtn').addEventListener('click', () => this.openAddModal());
+                document.getElementById('clearAllBtn').addEventListener('click', () => this.showClearConfirmation());
 
+                // Modal controls
+                document.getElementById('closeModalBtn').addEventListener('click', () => this.closeModal());
+                document.getElementById('cancelBtn').addEventListener('click', () => this.closeModal());
+                document.getElementById('saveNoteBtn').addEventListener('click', () => this.saveNote());
+
+                // Image handling
+                document.getElementById('uploadImageBtn').addEventListener('click', () => {
+                    document.getElementById('imageInput').click();
+                });
+                document.getElementById('imageInput').addEventListener('change', (e) => this.handleImageUpload(e));
+                document.getElementById('removeImageBtn').addEventListener('click', () => this.removeImage());
+
+                // Confirmation modal
+                document.getElementById('closeConfirmBtn').addEventListener('click', () => this.closeConfirmModal());
+                document.getElementById('confirmCancelBtn').addEventListener('click', () => this.closeConfirmModal());
+                document.getElementById('confirmActionBtn').addEventListener('click', () => this.executeConfirmedAction());
+
+                // Close modals on background click
+                document.getElementById('noteModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'noteModal') this.closeModal();
+                });
+                document.getElementById('confirmModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'confirmModal') this.closeConfirmModal();
+                });
+            },
+
+            // ========== NOTE OPERATIONS ==========
+            saveNote() {
+                const title = document.getElementById('noteTitle').value.trim();
+                const description = document.getElementById('noteDescription').value.trim();
+
+                if (!title || !description) {
+                    this.showToast('Please fill in all fields', 'error');
+                    return;
+                }
+
+                if (this.editingNoteId) {
+                    // Update existing note
+                    const note = this.notes.find(n => n.id === this.editingNoteId);
+                    if (note) {
+                        note.title = title;
+                        note.description = description;
+                        note.image = this.currentImageBase64;
+                        note.updatedAt = new Date().toISOString();
+                    }
+                    this.showToast('Note updated', 'success');
+                } else {
+                    // Create new note
+                    const newNote = {
+                        id: Date.now(),
+                        title,
+                        description,
+                        image: this.currentImageBase64,
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    };
+                    this.notes.unshift(newNote);
+                    this.showToast('Note created', 'success');
+                }
+
+                this.saveNotes();
+                this.closeModal();
+                this.render();
+            },
+
+            deleteNote(id) {
+                this.pendingAction = { type: 'delete', id };
+                this.showConfirmation('Are you sure you want to delete this note?');
+            },
+
+            openAddModal() {
+                this.editingNoteId = null;
+                this.currentImageBase64 = null;
+                document.getElementById('modalTitle').textContent = 'New Note';
+                document.getElementById('noteTitle').value = '';
+                document.getElementById('noteDescription').value = '';
+                this.renderImagePreview();
+                document.getElementById('noteModal').classList.add('active');
+                document.body.classList.add('no-scroll');
+                document.getElementById('noteTitle').focus();
+            },
+
+            openEditModal(id) {
+                const note = this.notes.find(n => n.id === id);
+                if (!note) return;
+
+                this.editingNoteId = id;
+                this.currentImageBase64 = note.image;
+
+                document.getElementById('modalTitle').textContent = 'Edit Note';
+                document.getElementById('noteTitle').value = note.title;
+                document.getElementById('noteDescription').value = note.description;
+                this.renderImagePreview();
+
+                document.getElementById('noteModal').classList.add('active');
+                document.body.classList.add('no-scroll');
+            },
+
+            closeModal() {
+                document.getElementById('noteModal').classList.remove('active');
+                document.body.classList.remove('no-scroll');
+                this.editingNoteId = null;
+                this.currentImageBase64 = null;
+            },
+
+            // ========== IMAGE HANDLING ==========
+            handleImageUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                if (file.size > 5 * 1024 * 1024) {
+                    this.showToast('Image must be less than 5MB', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.currentImageBase64 = e.target.result;
+                    this.renderImagePreview();
+                };
+                reader.readAsDataURL(file);
+            },
+
+            removeImage() {
+                this.currentImageBase64 = null;
+                this.renderImagePreview();
+            },
+
+            renderImagePreview() {
+                const preview = document.getElementById('imagePreview');
+                if (this.currentImageBase64) {
+                    preview.innerHTML = `<img src="${this.currentImageBase64}" alt="Preview">`;
+                } else {
+                    preview.innerHTML = '<div class="image-preview-empty">🖼️</div>';
+                }
+            },
+
+            // ========== STORAGE ==========
+            saveNotes() {
+                localStorage.setItem('notes', JSON.stringify(this.notes));
+            },
+
+            loadNotes() {
+                try {
+                    const stored = localStorage.getItem('notes');
+                    this.notes = stored ? JSON.parse(stored) : [];
+                } catch (e) {
+                    console.error('Error loading notes:', e);
+                    this.notes = [];
+                }
+            },
+
+            // ========== CLEAR ALL ==========
+            showClearConfirmation() {
+                this.pendingAction = { type: 'clearAll' };
+                this.showConfirmation('Delete all notes? This cannot be undone.');
+            },
+
+            clearAllNotes() {
+                this.notes = [];
+                this.saveNotes();
+                this.render();
+                this.showToast('All notes deleted', 'success');
+            },
+
+            // ========== CONFIRMATION MODAL ==========
+            showConfirmation(message) {
+                document.getElementById('confirmMessage').textContent = message;
+                document.getElementById('confirmModal').classList.add('active');
+                document.body.classList.add('no-scroll');
+            },
+
+            closeConfirmModal() {
+                document.getElementById('confirmModal').classList.remove('active');
+                document.body.classList.remove('no-scroll');
+                this.pendingAction = null;
+            },
+
+            executeConfirmedAction() {
+                if (!this.pendingAction) return;
+
+                if (this.pendingAction.type === 'delete') {
+                    this.notes = this.notes.filter(n => n.id !== this.pendingAction.id);
+                    this.saveNotes();
+                    this.render();
+                    this.showToast('Note deleted', 'success');
+                } else if (this.pendingAction.type === 'clearAll') {
+                    this.clearAllNotes();
+                }
+
+                this.closeConfirmModal();
+            },
+
+            // ========== RENDERING ==========
+            render() {
+                const grid = document.getElementById('notesGrid');
+
+                if (this.notes.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <p>No notes yet. Create your first note!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = this.notes.map(note => this.renderNoteCard(note)).join('');
+            },
+
+            renderNoteCard(note) {
+                const date = new Date(note.updatedAt);
+                const timeString = this.formatDate(date);
+                const imageHtml = note.image ? `<img src="${note.image}" class="note-image" alt="Note image">` : '';
+
+                return `
+                    <div class="note-card">
+                        ${imageHtml}
+                        <div class="note-content">
+                            <div class="note-title">${this.escapeHtml(note.title)}</div>
+                            <div class="note-description">${this.escapeHtml(note.description)}</div>
+                            <div class="note-timestamp">${timeString}</div>
+                        </div>
+                        <div class="note-actions">
+                            <button class="note-btn edit-btn" onclick="app.openEditModal(${note.id})">
+                                ✏️ Edit
+                            </button>
+                            <button class="note-btn delete-btn" onclick="app.deleteNote(${note.id})">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            },
+
+            formatDate(date) {
+                const today = new Date();
+                const yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+
+                if (date.toDateString() === today.toDateString()) {
+                    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                } else if (date.toDateString() === yesterday.toDateString()) {
+                    return 'Yesterday';
+                } else {
+                    return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                }
+            },
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            },
+
+            // ========== NOTIFICATIONS ==========
+            showToast(message, type = 'success') {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.animation = 'slideDown 0.3s ease forwards';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2000);
+            }
+        };
+
+        // ========== INITIALIZATION ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+    </script>
 </body>
 </html>
