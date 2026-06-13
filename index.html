@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Todo App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .app {
+      background: #fff;
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      background: #667eea;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #5a67d8;
+    }
+
+    ul {
+      list-style: none;
+      margin-top: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    li {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    li.completed {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .actions button {
+      margin-left: 5px;
+      background: #e53e3e;
+    }
+
+    .actions button.complete {
+      background: #38a169;
+    }
+
+    @media (max-width: 500px) {
+      .app {
+        margin: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+  <h1>Todo App</h1>
+
+  <div class="input-group">
+    <input type="text" id="todoInput" placeholder="Add a task...">
+    <button onclick="addTodo()">Add</button>
+  </div>
+
+  <ul id="todoList"></ul>
+</div>
+
+<script>
+  let todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+  function saveTodos() {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }
+
+  function renderTodos() {
+    const list = document.getElementById("todoList");
+    list.innerHTML = "";
+
+    todos.forEach((todo, index) => {
+      const li = document.createElement("li");
+      li.className = todo.completed ? "completed" : "";
+
+      li.innerHTML = `
+        <span onclick="toggleComplete(${index})">${todo.text}</span>
+        <div class="actions">
+          <button class="complete" onclick="toggleComplete(${index})">✔</button>
+          <button onclick="deleteTodo(${index})">✖</button>
+        </div>
+      `;
+
+      list.appendChild(li);
+    });
+  }
+
+  function addTodo() {
+    const input = document.getElementById("todoInput");
+    const text = input.value.trim();
+
+    if (text === "") return;
+
+    todos.push({ text, completed: false });
+    input.value = "";
+
+    saveTodos();
+    renderTodos();
+  }
+
+  function deleteTodo(index) {
+    todos.splice(index, 1);
+    saveTodos();
+    renderTodos();
+  }
+
+  function toggleComplete(index) {
+    todos[index].completed = !todos[index].completed;
+    saveTodos();
+    renderTodos();
+  }
+
+  renderTodos();
+</script>
+
+</body>
+</html>
