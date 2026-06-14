@@ -11,6 +11,7 @@
             box-sizing: border-box;
         }
 
+        /* DARK MODE (DEFAULT) */
         :root {
             --primary-bg: #0f172a;
             --secondary-bg: #1e293b;
@@ -21,10 +22,23 @@
             --accent-hover: #4f46e5;
             --success: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
             --danger-hover: #dc2626;
             --border: #475569;
-            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-bg: rgba(30, 41, 59, 0.85);
             --glass-border: rgba(255, 255, 255, 0.05);
+        }
+
+        /* LIGHT MODE VARIABLES */
+        body.light-mode {
+            --primary-bg: #f1f5f9;
+            --secondary-bg: #ffffff;
+            --tertiary-bg: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border: #cbd5e1;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(0, 0, 0, 0.05);
         }
 
         body {
@@ -36,485 +50,205 @@
                               radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.1), transparent 400px);
             color: var(--text-primary);
             overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         /* PIN LOCK SCREEN */
         #lockScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #090d16;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(9, 13, 22, 0.9); z-index: 9999; display: flex;
+            align-items: center; justify-content: center; backdrop-filter: blur(10px);
+            transition: opacity 0.3s ease;
         }
+        body.light-mode #lockScreen { background: rgba(255, 255, 255, 0.9); }
 
         .lock-card {
-            background: var(--secondary-bg);
-            padding: 40px 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid var(--border);
-            text-align: center;
-            max-width: 360px;
-            width: 90%;
+            background: var(--secondary-bg); padding: 40px 30px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid var(--border);
+            text-align: center; max-width: 360px; width: 90%;
         }
 
-        .lock-icon {
-            font-size: 50px;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
-        }
+        .lock-icon { font-size: 50px; margin-bottom: 20px; animation: pulse 2s infinite; }
+        .lock-card h2 { font-size: 22px; margin-bottom: 10px; color: var(--text-primary); }
+        .lock-card p { color: var(--text-secondary); font-size: 14px; margin-bottom: 25px; }
 
-        .lock-card h2 {
-            font-size: 22px;
-            margin-bottom: 10px;
-        }
-
-        .lock-card p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-
-        .pin-input-group {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
+        .pin-input-group { position: relative; margin-bottom: 20px; }
         .pin-input {
-            width: 100%;
-            padding: 15px;
-            background: var(--primary-bg);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            color: white;
-            font-size: 18px;
-            text-align: center;
-            letter-spacing: 4px;
-            transition: all 0.3s;
+            width: 100%; padding: 15px; background: var(--primary-bg); border: 2px solid var(--border);
+            border-radius: 12px; color: var(--text-primary); font-size: 18px; text-align: center;
+            letter-spacing: 4px; transition: all 0.3s;
         }
-
-        .pin-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
-        }
+        .pin-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); }
 
         .pin-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, var(--accent), #818cf8);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, opacity 0.2s;
+            width: 100%; padding: 15px; background: linear-gradient(135deg, var(--accent), #818cf8);
+            border: none; border-radius: 12px; color: white; font-size: 16px; font-weight: bold;
+            cursor: pointer; transition: transform 0.2s;
         }
-
-        .pin-btn:active {
-            transform: scale(0.98);
-        }
+        .pin-btn:active { transform: scale(0.98); }
 
         /* HEADER */
         .app-header {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 18px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            background: var(--glass-bg); backdrop-filter: blur(12px); border-bottom: 1px solid var(--glass-border);
+            padding: 15px 24px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 10px;
         }
 
-        .app-header h1 {
-            font-size: 22px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 12px;
-        }
+        .app-header h1 { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 
         .header-btn {
-            background: var(--tertiary-bg);
-            border: 1px solid var(--border);
-            color: white;
-            padding: 10px 16px;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s;
+            background: var(--tertiary-bg); border: 1px solid var(--border); color: var(--text-primary);
+            padding: 10px 14px; border-radius: 10px; cursor: pointer; display: flex; align-items: center;
+            gap: 6px; font-weight: 600; font-size: 14px; transition: all 0.2s;
+        }
+        .header-btn:hover { background: var(--border); }
+        .header-btn.add-btn { background: linear-gradient(135deg, var(--accent), #818cf8); border: none; color: white; }
+        .header-btn.add-btn:hover { opacity: 0.9; }
+        .header-btn:active { transform: scale(0.95); }
+
+        .icon-btn {
+            padding: 10px; border-radius: 50%; font-size: 16px; width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
         }
 
-        .header-btn.add-btn {
-            background: linear-gradient(135deg, var(--accent), #818cf8);
-            border: none;
+        /* CONTAINER & CONTROLS */
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+        .controls-section {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
         }
 
-        .header-btn:active {
-            transform: scale(0.95);
+        .dashboard-cards { display: flex; gap: 16px; flex-wrap: wrap; }
+        .dash-card {
+            background: var(--secondary-bg); padding: 12px 20px; border-radius: 12px;
+            border: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px;
         }
+        .dash-card span { font-size: 12px; color: var(--text-secondary); }
+        .dash-card strong { font-size: 18px; color: var(--accent); }
 
-        /* CONTAINER */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 24px;
+        .search-box { flex: 1; min-width: 250px; position: relative; max-width: 400px; }
+        .search-box input {
+            width: 100%; padding: 12px 16px 12px 40px; border-radius: 12px;
+            border: 1px solid var(--border); background: var(--secondary-bg); color: var(--text-primary);
+            font-size: 14px; transition: border 0.3s;
         }
+        .search-box input:focus { outline: none; border-color: var(--accent); }
+        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); opacity: 0.5; }
+
+        /* STOCK GRID */
+        .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
 
         /* EMPTY STATE */
         .empty-state {
-            grid-column: 1 / -1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 350px;
-            text-align: center;
+            grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 300px; text-align: center;
         }
-
-        .empty-state-icon {
-            font-size: 70px;
-            margin-bottom: 16px;
-            opacity: 0.6;
-        }
-
-        .empty-state p {
-            color: var(--text-secondary);
-            font-size: 16px;
-        }
-
-        /* STOCK GRID */
-        .stock-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
-        }
+        .empty-state-icon { font-size: 70px; margin-bottom: 16px; opacity: 0.6; }
 
         /* STOCK CARD */
         .stock-card {
-            background: var(--secondary-bg);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            transition: transform 0.3s, box-shadow 0.3s;
+            background: var(--secondary-bg); border-radius: 16px; overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1); border: 1px solid var(--border);
+            display: flex; flex-direction: column; position: relative; transition: transform 0.3s;
+        }
+        .stock-card:hover { transform: translateY(-5px); box-shadow: 0 8px 30px rgba(99, 102, 241, 0.15); }
+
+        .low-stock-badge {
+            position: absolute; top: 10px; right: 10px; background: var(--warning); color: #fff;
+            font-size: 11px; padding: 4px 8px; border-radius: 20px; z-index: 10; font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
-        .stock-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.15);
-        }
-
-        /* CARD IMAGE SLIDER */
-        .card-image-container {
-            width: 100%;
-            height: 180px;
-            position: relative;
-            background: #151f32;
-            overflow: hidden;
-        }
-
-        .card-slider {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .card-slider img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-
+        /* CARD IMAGE SLIDER (RESTORED) */
+        .card-image-container { width: 100%; height: 180px; position: relative; background: #151f32; overflow: hidden; }
+        .card-slider { display: flex; width: 100%; height: 100%; transition: transform 0.3s ease-in-out; }
+        .card-slider img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
         .slider-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.5);
-            color: white;
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            z-index: 2;
+            position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5);
+            color: white; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+            z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 12px;
         }
-
-        .slider-arrow.left { left: 8px; }
-        .slider-arrow.right { right: 8px; }
-
+        .slider-arrow:hover { background: rgba(0,0,0,0.8); }
+        .slider-arrow.left { left: 8px; } .slider-arrow.right { right: 8px; }
         .image-counter {
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            background: rgba(0,0,0,0.6);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 11px;
-            backdrop-filter: blur(4px);
+            position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white;
+            padding: 2px 8px; border-radius: 10px; font-size: 11px; backdrop-filter: blur(4px);
         }
 
-        .product-content {
-            padding: 16px;
-            flex: 1;
-        }
-
-        .product-title {
-            font-size: 19px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-
-        .info-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-
-        .info-row strong {
-            color: var(--text-primary);
-        }
-
+        .product-content { padding: 16px; flex: 1; }
+        .product-title { font-size: 19px; font-weight: 700; margin-bottom: 10px; line-height: 1.4; }
+        .info-row { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-secondary); margin-bottom: 8px; }
+        .info-row strong { color: var(--text-primary); }
+        
         .badge-date {
-            display: inline-block;
-            background: var(--tertiary-bg);
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            margin-top: 5px;
+            display: inline-block; background: var(--tertiary-bg); padding: 4px 8px;
+            border-radius: 6px; font-size: 12px; margin-top: 5px; color: var(--text-primary);
         }
 
-        .product-actions {
-            display: flex;
-            gap: 10px;
-            padding: 12px 16px 16px;
-            border-top: 1px solid var(--border);
-        }
-
+        .product-actions { display: flex; gap: 10px; padding: 12px 16px 16px; border-top: 1px solid var(--border); }
         .action-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: background 0.2s;
+            flex: 1; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px;
+            font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s;
         }
-
-        .edit-btn { background: var(--tertiary-bg); color: white; }
+        .edit-btn { background: var(--tertiary-bg); color: var(--text-primary); }
         .edit-btn:hover { background: var(--border); }
         .delete-btn { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
         .delete-btn:hover { background: rgba(239, 68, 68, 0.25); }
 
         /* MODAL */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-            align-items: center;
-            justify-content: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75); z-index: 1000; backdrop-filter: blur(5px);
+            align-items: center; justify-content: center;
         }
-
         .modal.active { display: flex; }
-
         .modal-content {
-            background: var(--secondary-bg);
-            border-radius: 20px;
-            width: 90%;
-            max-width: 550px;
-            max-height: 85vh;
-            overflow-y: auto;
-            border: 1px solid var(--border);
-            animation: slideUp 0.3s ease;
+            background: var(--secondary-bg); border-radius: 20px; width: 90%; max-width: 550px;
+            max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); animation: slideUp 0.3s ease;
         }
-
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
+        .modal-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .close-btn { background: none; border: none; color: var(--text-primary); font-size: 24px; cursor: pointer; }
         .modal-body { padding: 20px; }
-
-        .form-row-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
+        .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .form-group { margin-bottom: 16px; }
-
-        .form-label {
-            display: block;
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-
+        .form-label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600; }
         .form-input {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary-bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: white;
-            font-size: 14px;
+            width: 100%; padding: 12px; background: var(--primary-bg); border: 1px solid var(--border);
+            border-radius: 10px; color: var(--text-primary); font-size: 14px;
         }
+        .form-input:focus { outline: none; border-color: var(--accent); }
 
-        .form-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        /* NEW UPLOAD ZONE */
+        /* UPLOAD ZONE (RESTORED DRAG AND DROP) */
         .upload-zone {
-            width: 100%;
-            min-height: 140px;
-            background: var(--primary-bg);
-            border: 2px dashed var(--border);
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            padding: 15px;
-            transition: all 0.3s;
-            text-align: center;
+            width: 100%; min-height: 140px; background: var(--primary-bg); border: 2px dashed var(--border);
+            border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; padding: 15px; transition: all 0.3s; text-align: center;
         }
-
-        .upload-zone:hover, .upload-zone.dragover {
-            border-color: var(--accent);
-            background: rgba(99, 102, 241, 0.05);
-        }
-
+        .upload-zone:hover, .upload-zone.dragover { border-color: var(--accent); background: rgba(99, 102, 241, 0.05); }
         .upload-zone-icon { font-size: 40px; margin-bottom: 8px; }
         .upload-zone p { font-size: 13px; color: var(--text-secondary); }
 
-        .preview-thumbs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .thumb-wrapper {
-            width: 70px;
-            height: 70px;
-            position: relative;
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-        }
-
+        .preview-thumbs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; margin-top: 12px; }
+        .thumb-wrapper { width: 70px; height: 70px; position: relative; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
         .thumb-wrapper img { width: 100%; height: 100%; object-fit: cover; }
-
         .thumb-remove {
-            position: absolute;
-            top: 2px;
-            right: 2px;
-            background: var(--danger);
-            color: white;
-            border: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            font-size: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute; top: 2px; right: 2px; background: var(--danger); color: white; border: none;
+            width: 18px; height: 18px; border-radius: 50%; font-size: 10px; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
         }
 
-        .modal-footer {
-            padding: 16px 20px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
+        .modal-footer { padding: 16px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
+        .btn { flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 14px; }
         .btn-primary { background: linear-gradient(135deg, var(--accent), #818cf8); color: white; }
-        .btn-secondary { background: var(--tertiary-bg); color: white; }
+        .btn-secondary { background: var(--tertiary-bg); color: var(--text-primary); }
         .btn-danger { background: var(--danger); color: white; }
 
-        /* TOAST NOTIFICATION */
+        /* TOAST */
         .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            padding: 16px 24px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            z-index: 3000;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: slideIn 0.3s ease;
+            position: fixed; bottom: 24px; right: 24px; padding: 16px 24px; border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 3000; font-weight: 600; display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s ease;
         }
         .toast.success { background: var(--success); color: white; }
         .toast.error { background: var(--danger); color: white; }
@@ -522,7 +256,6 @@
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
         .hidden { display: none !important; }
         .no-scroll { overflow: hidden; }
     </style>
@@ -532,47 +265,67 @@
     <div id="lockScreen">
         <div class="lock-card">
             <div class="lock-icon">🔐</div>
-            <h2>স্টক ম্যানেজার লক</h2>
-            <p>অ্যাপ্লিকেশনটি ব্যবহার করতে সঠিক পিন নম্বরটি প্রদান করুন।</p>
+            <h2 class="lang-text" data-bn="স্টক ম্যানেজার লক" data-en="Stock Manager Lock">স্টক ম্যানেজার লক</h2>
+            <p class="lang-text" data-bn="অ্যাপ্লিকেশনটি ব্যবহার করতে সঠিক পিন প্রদান করুন।" data-en="Enter the correct PIN to use the app.">অ্যাপ্লিকেশনটি ব্যবহার করতে সঠিক পিন প্রদান করুন।</p>
             <div class="pin-input-group">
                 <input type="password" id="pinCode" class="pin-input" placeholder="•••••••••••" maxlength="11">
             </div>
-            <button class="pin-btn" id="loginBtn">আনলক করুন</button>
+            <button class="pin-btn lang-text" id="loginBtn" data-bn="আনলক করুন" data-en="Unlock">আনলক করুন</button>
         </div>
     </div>
 
     <header class="app-header">
-        <h1>📦 Stock Manager <span style="font-size: 12px; background: rgba(99,102,241,0.2); padding: 4px 8px; border-radius: 20px; color: #a5b4fc;">Cloud Sync</span></h1>
+        <h1>📦 <span class="lang-text" data-bn="স্টক ম্যানেজার" data-en="Stock Manager">স্টক ম্যানেজার</span> <span style="font-size: 12px; background: rgba(99,102,241,0.2); padding: 4px 8px; border-radius: 20px; color: var(--accent);">Cloud Sync</span></h1>
+        
         <div class="header-actions">
-            <button class="header-btn" id="clearAllBtn">🗑️ সব মুছুন</button>
-            <button class="header-btn add-btn" id="addProductBtn">➕ নতুন পণ্য</button>
+            <button class="header-btn icon-btn" id="themeBtn" title="Toggle Theme">☀️</button>
+            <button class="header-btn icon-btn" id="langBtn" title="Change Language">🌐 EN</button>
+            <button class="header-btn" id="clearAllBtn">🗑️ <span class="lang-text" data-bn="সব মুছুন" data-en="Clear All">সব মুছুন</span></button>
+            <button class="header-btn add-btn" id="addProductBtn">➕ <span class="lang-text" data-bn="নতুন পণ্য" data-en="Add Product">নতুন পণ্য</span></button>
         </div>
     </header>
 
     <div class="container">
-        <div class="stock-grid" id="stockGrid">
+        <div class="controls-section">
+            <div class="dashboard-cards">
+                <div class="dash-card">
+                    <span class="lang-text" data-bn="মোট আইটেম" data-en="Total Items">মোট আইটেম</span>
+                    <strong id="dashTotalItems">0</strong>
+                </div>
+                <div class="dash-card">
+                    <span class="lang-text" data-bn="মোট স্টক মূল্য" data-en="Total Stock Value">মোট স্টক মূল্য</span>
+                    <strong id="dashTotalValue">৳0</strong>
+                </div>
             </div>
+            
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" class="lang-placeholder" data-bn-placeholder="পণ্যের নাম দিয়ে খুঁজুন..." data-en-placeholder="Search by product name..." placeholder="পণ্যের নাম দিয়ে খুঁজুন...">
+            </div>
+        </div>
+
+        <div class="stock-grid" id="stockGrid"></div>
     </div>
 
     <div class="modal" id="productModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modalTitle">নতুন পণ্য যোগ করুন</h2>
+                <h2 id="modalTitle" class="lang-text" data-bn="নতুন পণ্য যোগ করুন" data-en="Add New Product">নতুন পণ্য যোগ করুন</h2>
                 <button class="close-btn" id="closeModalBtn">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label class="form-label">পণ্যের নাম *</label>
-                    <input type="text" class="form-input" id="productName" placeholder="যেমন: মিনিকেট চাল, ল্যাপটপ ইত্যাদি...">
+                    <label class="form-label lang-text" data-bn="পণ্যের নাম *" data-en="Product Name *">পণ্যের নাম *</label>
+                    <input type="text" class="form-input" id="productName" placeholder="যেমন: মিনিকেট চাল...">
                 </div>
 
                 <div class="form-row-2">
                     <div class="form-group">
-                        <label class="form-label">পরিমাণ *</label>
-                        <input type="number" class="form-input" id="productQuantity" placeholder="সংখ্যা লিখুন...">
+                        <label class="form-label lang-text" data-bn="পরিমাণ *" data-en="Quantity *">পরিমাণ *</label>
+                        <input type="number" class="form-input" id="productQuantity" placeholder="সংখ্যা...">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">মাপের একক (Unit) *</label>
+                        <label class="form-label lang-text" data-bn="মাপের একক (Unit) *" data-en="Unit *">মাপের একক (Unit) *</label>
                         <select class="form-input" id="productUnit">
                             <option value="পিস">পিস (Pcs)</option>
                             <option value="কেজি">কেজি (KG)</option>
@@ -586,29 +339,29 @@
 
                 <div class="form-row-2">
                     <div class="form-group">
-                        <label class="form-label">দাম (প্রতি একক) *</label>
-                        <input type="number" class="form-input" id="productPrice" placeholder="৳ দাম লিখুন...">
+                        <label class="form-label lang-text" data-bn="দাম (প্রতি একক) *" data-en="Price (Per Unit) *">দাম (প্রতি একক) *</label>
+                        <input type="number" class="form-input" id="productPrice" placeholder="৳ দাম...">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">তারিখ (ঐচ্ছিক)</label>
+                        <label class="form-label lang-text" data-bn="তারিখ (ঐচ্ছিক)" data-en="Date (Optional)">তারিখ (ঐচ্ছিক)</label>
                         <input type="date" class="form-input" id="productDate">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">পণ্যের ছবি (একাধিক আপলোড করতে পারেন)</label>
+                    <label class="form-label lang-text" data-bn="পণ্যের ছবি (একাধিক আপলোড করতে পারেন)" data-en="Product Images (Multiple allowed)">পণ্যের ছবি (একাধিক আপলোড করতে পারেন)</label>
                     <div class="upload-zone" id="uploadZone">
                         <div class="upload-zone-icon">📸</div>
-                        <p>এখানে ক্লিক করুন অথবা ছবি ড্র্যাগ করে ছেড়ে দিন</p>
-                        <span style="font-size: 11px; color: var(--text-secondary);">সর্বোচ্চ ৫টি ছবি যুক্ত করার পরামর্শ দেওয়া হলো</span>
+                        <p class="lang-text" data-bn="এখানে ক্লিক করুন অথবা ছবি ড্র্যাগ করে ছেড়ে দিন" data-en="Click here or Drag & Drop images">এখানে ক্লিক করুন অথবা ছবি ড্র্যাগ করে ছেড়ে দিন</p>
+                        <span style="font-size: 11px; color: var(--text-secondary);" class="lang-text" data-bn="সর্বোচ্চ ৫টি ছবি যুক্ত করার পরামর্শ দেওয়া হলো" data-en="Recommended up to 5 images">সর্বোচ্চ ৫টি ছবি যুক্ত করার পরামর্শ দেওয়া হলো</span>
                     </div>
                     <input type="file" id="imageInput" accept="image/*" multiple class="hidden">
                     <div class="preview-thumbs-grid" id="previewThumbsGrid"></div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" id="cancelBtn">বাতিল</button>
-                <button class="btn btn-primary" id="saveProductBtn">সংরক্ষণ করুন</button>
+                <button class="btn btn-secondary lang-text" id="cancelBtn" data-bn="বাতিল" data-en="Cancel">বাতিল</button>
+                <button class="btn btn-primary lang-text" id="saveProductBtn" data-bn="সংরক্ষণ করুন" data-en="Save Product">সংরক্ষণ করুন</button>
             </div>
         </div>
     </div>
@@ -616,36 +369,77 @@
     <div class="modal" id="confirmModal">
         <div class="modal-content" style="max-width: 350px;">
             <div class="modal-header">
-                <h2>নিশ্চিত করুন</h2>
+                <h2 class="lang-text" data-bn="নিশ্চিত করুন" data-en="Confirm Action">নিশ্চিত করুন</h2>
                 <button class="close-btn" id="closeConfirmBtn">&times;</button>
             </div>
             <div class="modal-body">
                 <p id="confirmMessage" style="color: var(--text-secondary); line-height: 1.5;"></p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" id="confirmCancelBtn">বাতিল</button>
-                <button class="btn btn-danger" id="confirmActionBtn">মুছে ফেলুন</button>
+                <button class="btn btn-secondary lang-text" id="confirmCancelBtn" data-bn="বাতিল" data-en="Cancel">বাতিল</button>
+                <button class="btn btn-danger lang-text" id="confirmActionBtn" data-bn="মুছে ফেলুন" data-en="Delete">মুছে ফেলুন</button>
             </div>
         </div>
     </div>
 
     <script>
-        // ========== APP CONFIG & STATE ==========
         const app = {
             products: [],
             editingProductId: null,
-            uploadedImages: [], // Holds Base64 array of current editing/adding item
+            uploadedImages: [], 
             pendingAction: null,
-            correctPin: "01942154634",
             
-            // Multi-user Sync URL (ফ্রি পাবলিক কি-ভ্যালু ক্লাউড ডেটাবেজ আপনার পিনের আইডিতে)
-            // এর মাধ্যমে যে কেউ যেকোনো ব্রাউজার থেকে এই ফাইল ওপেন করলে ডাটা লাইভ সিঙ্ক পাবে।
-            syncApiUrl: "https://kvdb.io/S8dfY7sd8f7G6s7df6s7/stock_manager_db_" + "01942154634",
+            // Your explicitly requested PIN
+            correctPin: "01942154634",
+            syncApiUrl: "https://kvdb.io/S8dfY7sd8f7G6s7df6s7/stock_manager_db_01942154634",
+            
+            // App State
+            theme: localStorage.getItem('app_theme') || 'dark',
+            lang: localStorage.getItem('app_lang') || 'bn',
+            searchQuery: '',
 
             init() {
+                this.applyTheme();
+                this.applyLang();
                 this.checkSessionLock();
                 this.setupEventListeners();
                 this.loadProducts();
+            },
+
+            // --- Theme & Language Logic ---
+            applyTheme() {
+                const btn = document.getElementById('themeBtn');
+                if (this.theme === 'light') {
+                    document.body.classList.add('light-mode');
+                    btn.textContent = '🌙';
+                } else {
+                    document.body.classList.remove('light-mode');
+                    btn.textContent = '☀️';
+                }
+                localStorage.setItem('app_theme', this.theme);
+            },
+            toggleTheme() {
+                this.theme = this.theme === 'dark' ? 'light' : 'dark';
+                this.applyTheme();
+            },
+
+            applyLang() {
+                const btn = document.getElementById('langBtn');
+                btn.textContent = this.lang === 'bn' ? '🌐 EN' : '🌐 BN';
+                
+                document.querySelectorAll('.lang-text').forEach(el => {
+                    el.textContent = el.getAttribute(`data-${this.lang}`);
+                });
+                document.querySelectorAll('.lang-placeholder').forEach(el => {
+                    el.setAttribute('placeholder', el.getAttribute(`data-${this.lang}-placeholder`));
+                });
+                
+                localStorage.setItem('app_lang', this.lang);
+                this.render(); 
+            },
+            toggleLang() {
+                this.lang = this.lang === 'bn' ? 'en' : 'bn';
+                this.applyLang();
             },
 
             checkSessionLock() {
@@ -655,6 +449,16 @@
             },
 
             setupEventListeners() {
+                // Header Toggles
+                document.getElementById('themeBtn').addEventListener('click', () => this.toggleTheme());
+                document.getElementById('langBtn').addEventListener('click', () => this.toggleLang());
+                
+                // Search
+                document.getElementById('searchInput').addEventListener('input', (e) => {
+                    this.searchQuery = e.target.value.toLowerCase();
+                    this.render();
+                });
+
                 // Pin Unlock
                 document.getElementById('loginBtn').addEventListener('click', () => this.handleUnlock());
                 document.getElementById('pinCode').addEventListener('keypress', (e) => {
@@ -670,7 +474,7 @@
                 document.getElementById('cancelBtn').addEventListener('click', () => this.closeModal());
                 document.getElementById('saveProductBtn').addEventListener('click', () => this.saveProduct());
 
-                // Modern Upload Zone Click and Drag-Drop
+                // Drag and Drop Upload Zone
                 const uploadZone = document.getElementById('uploadZone');
                 const imageInput = document.getElementById('imageInput');
 
@@ -697,34 +501,29 @@
                 document.getElementById('confirmActionBtn').addEventListener('click', () => this.executeConfirmedAction());
             },
 
-            // ========== AUTHENTICATION ==========
+            // --- Authentication ---
             handleUnlock() {
                 const inputPin = document.getElementById('pinCode').value;
                 if (inputPin === this.correctPin) {
                     sessionStorage.setItem('isUnlocked', 'true');
-                    document.getElementById('lockScreen').style.transition = "opacity 0.3s";
                     document.getElementById('lockScreen').style.opacity = 0;
-                    setTimeout(() => {
-                        document.getElementById('lockScreen').classList.add('hidden');
-                    }, 300);
-                    this.showToast('সফলভাবে আনলক হয়েছে', 'success');
+                    setTimeout(() => { document.getElementById('lockScreen').classList.add('hidden'); }, 300);
+                    this.showToast(this.lang === 'bn' ? 'সফলভাবে আনলক হয়েছে' : 'Unlocked Successfully', 'success');
                 } else {
-                    this.showToast('ভুল পিন নম্বর! আবার চেষ্টা করুন।', 'error');
+                    this.showToast(this.lang === 'bn' ? 'ভুল পিন নম্বর! আবার চেষ্টা করুন।' : 'Wrong PIN!', 'error');
                     document.getElementById('pinCode').value = '';
                     document.getElementById('pinCode').focus();
                 }
             },
 
-            // ========== IMAGE PROCESSING (MULTIPLE) ==========
+            // --- Image Processing ---
             handleImageFiles(files) {
                 Array.from(files).forEach(file => {
                     if (!file.type.startsWith('image/')) return;
-                    
                     if (file.size > 3 * 1024 * 1024) {
-                        this.showToast('প্রতিটি ছবির সাইজ ৩MB এর কম হতে হবে', 'error');
+                        this.showToast(this.lang === 'bn' ? 'ছবির সাইজ ৩MB এর কম হতে হবে' : 'Image size must be under 3MB', 'error');
                         return;
                     }
-
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         this.uploadedImages.push(e.target.result);
@@ -749,9 +548,10 @@
                 `).join('');
             },
 
-            // ========== CARD IMAGE SLIDER NAVIGATION ==========
+            // --- Multi-Image Slider (Restored) ---
             moveSlider(productId, direction) {
                 const card = document.querySelector(`[data-id="${productId}"]`);
+                if(!card) return;
                 const slider = card.querySelector('.card-slider');
                 const counter = card.querySelector('.current-index');
                 const total = parseInt(card.querySelector('.total-count').textContent);
@@ -769,7 +569,7 @@
                 counter.textContent = currentIndex + 1;
             },
 
-            // ========== OPERATIONS ==========
+            // --- Operations ---
             saveProduct() {
                 const name = document.getElementById('productName').value.trim();
                 const quantity = document.getElementById('productQuantity').value.trim();
@@ -778,36 +578,25 @@
                 const date = document.getElementById('productDate').value;
 
                 if (!name || !quantity || !price) {
-                    this.showToast('দয়া করে সব বাধ্যতামূলক (*) তথ্য পূরণ করুন', 'error');
+                    this.showToast(this.lang === 'bn' ? 'সব বাধ্যতামূলক (*) তথ্য পূরণ করুন' : 'Fill all required (*) fields', 'error');
                     return;
                 }
 
                 if (this.editingProductId) {
                     const product = this.products.find(p => p.id === this.editingProductId);
                     if (product) {
-                        product.name = name;
-                        product.quantity = quantity;
-                        product.unit = unit;
-                        product.price = price;
-                        product.date = date;
-                        product.images = [...this.uploadedImages];
+                        product.name = name; product.quantity = quantity; product.unit = unit;
+                        product.price = price; product.date = date; product.images = [...this.uploadedImages];
                         product.updatedAt = new Date().toISOString();
                     }
-                    this.showToast('পণ্য আপডেট করা হয়েছে', 'success');
+                    this.showToast(this.lang === 'bn' ? 'পণ্য আপডেট করা হয়েছে' : 'Product updated', 'success');
                 } else {
                     const newProduct = {
-                        id: Date.now(),
-                        name,
-                        quantity,
-                        unit,
-                        price,
-                        date,
-                        images: [...this.uploadedImages],
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
+                        id: Date.now(), name, quantity, unit, price, date,
+                        images: [...this.uploadedImages], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
                     };
                     this.products.unshift(newProduct);
-                    this.showToast('নতুন পণ্য যোগ করা হয়েছে', 'success');
+                    this.showToast(this.lang === 'bn' ? 'নতুন পণ্য যোগ করা হয়েছে' : 'New product added', 'success');
                 }
 
                 this.saveProductsToStorage();
@@ -817,13 +606,19 @@
 
             deleteProduct(id) {
                 this.pendingAction = { type: 'delete', id };
-                this.showConfirmation('আপনি কি নিশ্চিতভাবে এই পণ্যটি স্টক থেকে মুছে ফেলতে চান?');
+                this.showConfirmation(this.lang === 'bn' ? 'আপনি কি নিশ্চিতভাবে পণ্যটি মুছতে চান?' : 'Are you sure you want to delete this product?');
             },
 
+            showClearConfirmation() {
+                this.pendingAction = { type: 'clearAll' };
+                this.showConfirmation(this.lang === 'bn' ? 'সব ডাটা মুছে ফেলতে চান? এটি আর ফেরানো সম্ভব নয়।' : 'Clear ALL data? This cannot be undone.');
+            },
+
+            // --- Modals ---
             openAddModal() {
                 this.editingProductId = null;
                 this.uploadedImages = [];
-                document.getElementById('modalTitle').textContent = 'নতুন পণ্য যোগ করুন';
+                document.getElementById('modalTitle').textContent = document.getElementById('modalTitle').getAttribute(`data-${this.lang}`);
                 document.getElementById('productName').value = '';
                 document.getElementById('productQuantity').value = '';
                 document.getElementById('productUnit').value = 'পিস';
@@ -842,7 +637,7 @@
                 this.editingProductId = id;
                 this.uploadedImages = product.images ? [...product.images] : [];
 
-                document.getElementById('modalTitle').textContent = 'পণ্যের তথ্য এডিট করুন';
+                document.getElementById('modalTitle').textContent = this.lang === 'bn' ? 'পণ্যের তথ্য এডিট করুন' : 'Edit Product';
                 document.getElementById('productName').value = product.name;
                 document.getElementById('productQuantity').value = product.quantity;
                 document.getElementById('productUnit').value = product.unit || 'পিস';
@@ -859,46 +654,6 @@
                 document.body.classList.remove('no-scroll');
             },
 
-            // ========== STORAGE & CLOUD SYNC ==========
-            saveProductsToStorage() {
-                // local save
-                localStorage.setItem('stock_products', JSON.stringify(this.products));
-                
-                // Cloud Sync (সব ইউজারের ডাটা একসাথে আপডেট রাখার জন্য)
-                fetch(this.syncApiUrl, {
-                    method: 'POST',
-                    body: JSON.stringify(this.products),
-                    headers: { 'Content-Type': 'application/json' }
-                }).catch(err => console.log("Cloud sync temporary delay, saved locally."));
-            },
-
-            loadProducts() {
-                // প্রথমে লোকাল ডাটা লোড করি দ্রুত দেখানোর জন্য
-                const stored = localStorage.getItem('stock_products');
-                this.products = stored ? JSON.parse(stored) : [];
-                this.render();
-
-                // এরপর ক্লাউড সার্ভার থেকে লাইভ আপডেট ডাটা নিয়ে আসি
-                fetch(this.syncApiUrl)
-                    .then(res => {
-                        if(res.ok) return res.json();
-                    })
-                    .then(data => {
-                        if (data && Array.isArray(data)) {
-                            this.products = data;
-                            localStorage.setItem('stock_products', JSON.stringify(data));
-                            this.render();
-                        }
-                    })
-                    .catch(e => console.log("Offline mode active. Using local data."));
-            },
-
-            showClearConfirmation() {
-                this.pendingAction = { type: 'clearAll' };
-                this.showConfirmation('সব ডাটা মুছে ফেলতে চান? ক্লাউডসহ সব ডিভাইসের ডাটা সম্পূর্ণ মুছে যাবে এবং এটি আর ফেরানো সম্ভব নয়।');
-            },
-
-            // ========== CONFIRMATION SYSTEM ==========
             showConfirmation(message) {
                 document.getElementById('confirmMessage').textContent = message;
                 document.getElementById('confirmModal').classList.add('active');
@@ -911,45 +666,70 @@
 
             executeConfirmedAction() {
                 if (!this.pendingAction) return;
-
                 if (this.pendingAction.type === 'delete') {
                     this.products = this.products.filter(p => p.id !== this.pendingAction.id);
-                    this.saveProductsToStorage();
-                    this.render();
-                    this.showToast('পণ্য মুছে ফেলা হয়েছে', 'success');
+                    this.showToast(this.lang === 'bn' ? 'পণ্য মুছে ফেলা হয়েছে' : 'Product deleted', 'success');
                 } else if (this.pendingAction.type === 'clearAll') {
                     this.products = [];
-                    this.saveProductsToStorage();
-                    this.render();
-                    this.showToast('সকল পণ্য সম্পূর্ণ মুছে ফেলা হয়েছে', 'success');
+                    this.showToast(this.lang === 'bn' ? 'সকল পণ্য মুছে ফেলা হয়েছে' : 'All products cleared', 'success');
                 }
+                this.saveProductsToStorage();
+                this.render();
                 this.closeConfirmModal();
             },
 
-            // ========== RENDER DRAWING ==========
+            // --- Storage & Sync ---
+            saveProductsToStorage() {
+                localStorage.setItem('stock_products', JSON.stringify(this.products));
+                fetch(this.syncApiUrl, { method: 'POST', body: JSON.stringify(this.products), headers: { 'Content-Type': 'application/json' } })
+                .catch(err => console.log("Cloud sync delayed."));
+            },
+
+            loadProducts() {
+                const stored = localStorage.getItem('stock_products');
+                this.products = stored ? JSON.parse(stored) : [];
+                this.render();
+
+                fetch(this.syncApiUrl).then(res => { if(res.ok) return res.json(); }).then(data => {
+                    if (data && Array.isArray(data)) {
+                        this.products = data;
+                        localStorage.setItem('stock_products', JSON.stringify(data));
+                        this.render();
+                    }
+                }).catch(e => console.log("Offline mode active."));
+            },
+
+            // --- Render ---
+            updateDashboard(filteredProducts) {
+                const totalItems = filteredProducts.length;
+                const totalValue = filteredProducts.reduce((sum, p) => sum + (parseFloat(p.quantity) * parseFloat(p.price)), 0);
+                
+                document.getElementById('dashTotalItems').textContent = totalItems;
+                document.getElementById('dashTotalValue').textContent = '৳' + totalValue.toLocaleString('en-IN');
+            },
+
             render() {
                 const grid = document.getElementById('stockGrid');
+                const filtered = this.products.filter(p => p.name.toLowerCase().includes(this.searchQuery));
+                
+                this.updateDashboard(filtered);
 
-                if (this.products.length === 0) {
-                    grid.innerHTML = `
-                        <div class="empty-state">
-                            <div class="empty-state-icon">📭</div>
-                            <p>কোনো পণ্যের ডাটা পাওয়া যায়নি। নতুন পণ্য যোগ করুন!</p>
-                        </div>
-                    `;
+                if (filtered.length === 0) {
+                    const emptyMsg = this.lang === 'bn' ? 'কোনো পণ্যের ডাটা পাওয়া যায়নি। নতুন পণ্য যোগ করুন!' : 'No product data found. Add new product!';
+                    grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><p>${emptyMsg}</p></div>`;
                     return;
                 }
 
-                grid.innerHTML = this.products.map(product => this.renderProductCard(product)).join('');
+                grid.innerHTML = filtered.map(product => this.renderProductCard(product)).join('');
             },
 
             renderProductCard(product) {
-                const dateObj = new Date(product.updatedAt);
-                const timeString = this.formatDate(dateObj);
                 const unit = product.unit || 'পিস';
+                const isLowStock = parseFloat(product.quantity) < 5;
+                const lowStockHtml = isLowStock ? `<div class="low-stock-badge">${this.lang === 'bn' ? '⚠️ স্টক কম' : '⚠️ Low Stock'}</div>` : '';
                 
-                // Multi Image Slider HTML logic
-                let imageSectionHtml = '<div class="card-image-container"><div class="card-slider">📸 নো ইমেজ</div></div>';
+                // Restored Multi Image Slider logic
+                let imageSectionHtml = `<div class="card-image-container"><div style="color:var(--text-secondary); display:flex; align-items:center; justify-content:center; height:100%;">No Image</div></div>`;
                 if (product.images && product.images.length > 0) {
                     const imgsHtml = product.images.map(img => `<img src="${img}" alt="Product">`).join('');
                     const arrowsHtml = product.images.length > 1 ? `
@@ -968,38 +748,24 @@
                     `;
                 }
 
-                const optionalDateHtml = product.date ? `<div class="badge-date">📅 নথিভুক্ত তারিখ: ${product.date}</div>` : '';
+                const optionalDateHtml = product.date ? `<div class="badge-date">📅 ${this.lang === 'bn' ? 'তারিখ' : 'Date'}: ${this.escapeHtml(product.date)}</div>` : '';
 
                 return `
                     <div class="stock-card">
+                        ${lowStockHtml}
                         ${imageSectionHtml}
                         <div class="product-content">
                             <div class="product-title">${this.escapeHtml(product.name)}</div>
-                            <div class="info-row">📦 পরিমাণ: <strong>${this.escapeHtml(product.quantity)} ${unit}</strong></div>
-                            <div class="info-row">💰 দাম: <strong>৳${this.escapeHtml(product.price)}</strong> (প্রতি ${unit})</div>
+                            <div class="info-row">📦 ${this.lang === 'bn' ? 'পরিমাণ' : 'Qty'}: <strong>${this.escapeHtml(product.quantity)} ${unit}</strong></div>
+                            <div class="info-row">💰 ${this.lang === 'bn' ? 'দাম' : 'Price'}: <strong>৳${this.escapeHtml(product.price)}</strong> (প্রতি ${unit})</div>
                             ${optionalDateHtml}
-                            <div style="font-size: 11px; color: var(--text-secondary); margin-top: 12px; opacity: 0.7;">হালনাগাদ: ${timeString}</div>
                         </div>
                         <div class="product-actions">
-                            <button class="action-btn edit-btn" onclick="app.openEditModal(${product.id})">✏️ এডিট</button>
-                            <button class="action-btn delete-btn" onclick="app.deleteProduct(${product.id})">🗑️ মুছুন</button>
+                            <button class="action-btn edit-btn" onclick="app.openEditModal(${product.id})">✏️ ${this.lang === 'bn' ? 'এডিট' : 'Edit'}</button>
+                            <button class="action-btn delete-btn" onclick="app.deleteProduct(${product.id})">🗑️ ${this.lang === 'bn' ? 'মুছুন' : 'Delete'}</button>
                         </div>
                     </div>
                 `;
-            },
-
-            formatDate(date) {
-                const today = new Date();
-                const yesterday = new Date(today);
-                yesterday.setDate(yesterday.getDate() - 1);
-
-                if (date.toDateString() === today.toDateString()) {
-                    return 'আজ ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                } else if (date.toDateString() === yesterday.toDateString()) {
-                    return 'গতকাল';
-                } else {
-                    return date.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
-                }
             },
 
             escapeHtml(text) {
